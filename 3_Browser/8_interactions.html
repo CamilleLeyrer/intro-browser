@@ -40,22 +40,22 @@
             Which one is Brendan Eich?
         </div>
 
-        <!-- For Ex.  -->
-        <!-- <div id="counter" class="container">
-           <table>
-               <thead>
-                   <tr>
-                       <th>Correct</th><th>Wrong</th>
-                   </tr>
-               </thead>
-               <tbody>
-                   <tr>
-                       <td id="correct-counter">0</td>
-                       <td id="wrong-counter">0</td>
-                   </tr>
-               </tbody>
-            </table>
-        </div> -->
+        <div id="counter" class="container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Correct</th><th>Wrong</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="correct-counter">0</td>
+                        <td id="wrong-counter">0</td>
+                    </tr>
+                </tbody>
+             </table>
+         </div>
+
 
         <!-- 
 
@@ -63,14 +63,25 @@
             ////////////////////////////////////////
 
             The most commonly used listener, is the onclick listener.
-            It waits for a click somewhere on the page, then it fires a function. So all you need to create an event listener is an element and a function.
+            It waits for a click somewhere on the page, then it fires a function. So all you need to create an event listener is 
+            an element and a function.
 
             Listen to click on each of the two images on this page and display an alert saying:
 
             - "Try again", if the image selected is NOT Brendan Eich.
+
             
-            - "Correct! You are a true Brendan's fan!", otherwise
         -->
+       <!--  
+        <script>
+            let above = document.querySelector('#above img');
+            above.onclick = () => alert('Try again.');
+
+            let below = document.querySelector('#below img');
+            below.onclick = () => alert('Correct! You are a true Brendan\'s fan!');
+
+        </script>
+-->
 
         <!-- 
 
@@ -81,19 +92,38 @@
 
            It means that if an event is not caught at child element, it is emitted on the parent element, and so on until window.
 
-           Sometimes, it is more convenient (and better performing) to register only one event listener on the parent element, and then checking which child originated it. You can do this by looking at the "target" property of the event.
+           Sometimes, it is more convenient (and better performing) to register only one event listener on the parent element, and
+           then checking which child originated it. You can do this by looking at the "target" property of the event.
 
            Now, rewrite exercise 1 with only one event listener.
            Hint: the event is passed as an object to the listener.
         
         -->
+        <!-- 
+ <script>
+            let firstContainer = document.querySelector('#main .container');
 
+            firstContainer.onclick = event => {
+                // This is the element that was clicked.
+                let target = event.target;
+                
+                // Check the dataset.
+                if (target.dataset.name === 'Brendan') {
+                    alert('Correct! You are a true Brendan\'s fan!'); 
+                }
+                else {
+                    alert('Try again.');
+                }
+            };
+        </script> 
+        -->
         <!-- 
 
             Exercise 3. Keeping Stats.
             //////////////////////////
 
-            Let's keep a counter of how many times we clicked on the right or wrong image and display the totals on the page in real time.
+            Let's keep a counter of how many times we clicked on the right or wrong image and display the totals on the page
+            in real time.
 
             a. For this, you need to update the HTML a bit. Uncomment the lines:
 
@@ -106,7 +136,28 @@
             b. Now define two global variables, each counting the clicks on each image, and make sure to update them at every click. The current value of those variables should be displayed on the page as well.
             
         -->
+        <!-- 
+        <script>
+    
+            let firstContainer = document.querySelector('#main .container');
 
+            const updateCounter = correct => {
+                let id = (correct ? 'correct' : 'wrong') + '-counter';
+                let counter = document.querySelector(`#${id}`);
+                let currentValue = counter.innerText || 0;
+                counter.innerText = ++currentValue;
+             };
+
+            firstContainer.onclick = event => {
+                // This is the element that was clicked.
+                let target = event.target;
+                // Check the dataset.
+                let res = target.dataset.name === 'Brendan';
+                // Update counter.
+                updateCounter(res);
+            };
+        
+        </script> -->
         <!-- 
 
             Exercise 4. Sound On!
@@ -130,6 +181,42 @@
             https://caniuse.com/?search=Audio
         -->
 
+        
+    <script>    
+        let firstContainer = document.querySelector('#main .container');
+
+        const updateCounter = correct => {
+            let id = (correct ? 'correct' : 'wrong') + '-counter';
+            let counter = document.querySelector(`#${id}`);
+            let currentValue = counter.innerText || 0;
+            counter.innerText = ++currentValue;
+        };
+
+        const playSound = correct => {
+            let file;
+            if (correct) file = 'success-fanfare-trumpets-6185'; 
+            else file = 'jews_harp_boing-7111';
+
+            try {
+                let audio = new Audio(`../sounds/${file}.mp3`);
+                audio.play();
+            }
+            catch(e) {
+                console.log('cannot play sounds in this browser :(');
+            }
+        };
+
+        firstContainer.onclick = event => {
+            // This is the element that was clicked.
+            let target = event.target;
+            // Check the dataset.
+            let res = target.dataset.name === 'Brendan';
+            // Update counter.
+            updateCounter(res);
+            // Play sound.
+            playSound(res);
+        };
+    </script>  
         <!-- 
 
             Exercise 5. Advanced. Pick Me!
